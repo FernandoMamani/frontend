@@ -21,9 +21,13 @@ const BookList = ({ books }) => {
         },
         body: JSON.stringify({
           title: bookTitle,
+          _method: "DELETE",
         }),
       }
     );
+    if (res.ok) {
+      window.location.href = "/libros";
+    }
   }
   return (
     <div>
