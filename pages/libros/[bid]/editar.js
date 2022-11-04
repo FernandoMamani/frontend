@@ -1,11 +1,18 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import {error} from "next/dist/build/output/log";
 export async function getServerSideProps({ params }) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books/${params.bid}`
   );
-  const data = await res.json();
+  let data=[];
+  try {
+
+    data = await res.json();
+  }catch (e) {
+    console.log(e)
+  }
   return {
     props: {
       book: data,
@@ -48,12 +55,13 @@ const BookEdit = ({ book }) => {
       <h1>Book Edit</h1>
       <form onSubmit={handleSubmit}>
         <input
+            data-cy="input-book-title"
           type="text"
           onChange={(e) => setBookTitle(e.target.value)}
           value={String(bookTitle)}
           disabled={submitting}
         />
-        <button disabled={submitting}>
+        <button disabled={submitting} data-cy="button-submit-book">
           {submitting ? "Enviando..." : "Enviar"}
         </button>
         {errors.title && (

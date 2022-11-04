@@ -1,6 +1,6 @@
 import Link from "next/link";
 export async function getStaticProps() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books`).then();
   const data = await res.json();
   return {
     props: {
@@ -9,10 +9,10 @@ export async function getStaticProps() {
   };
 }
 const BookList = ({ books }) => {
-  async function handleDelete(e) {
+  async function handleDelete(e,bookId) {
     e.preventDefault();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books/${bookId}`,
       {
         method: "POST",
         headers: {
@@ -20,7 +20,6 @@ const BookList = ({ books }) => {
           "content-type": "appication/json",
         },
         body: JSON.stringify({
-          title: bookTitle,
           _method: "DELETE",
         }),
       }
@@ -32,14 +31,14 @@ const BookList = ({ books }) => {
   return (
     <div>
       <h1>List libro</h1>
-      <ul>
+      <ul data-cy="book-list">
         {books.map((book) => (
           <li key={`book-${book.id}`}>
-            <Link href={`/libros/${book.id}`}>{book.title}</Link>
+            <Link data-cy={`link-to-visit-book-${book.id}`} href={`/libros/${book.id}`}>{book.title}</Link>
             {" - "}
-            <Link href={`/libros/${book.id}/editar`}>Editar</Link>
-            <form onSubmit={handleDelete}>
-              <button>Delete</button>
+            <Link data-cy={`link-to-edit-book-${book.id}`} href={`/libros/${book.id}/editar`}>Editar</Link>
+            <form onSubmit={(e)=>handleDelete(e,book.id)} style={{display:'inline'}}>
+              <button data-cy={`link-to-delete-book-${book.id}`}>Delete</button>
             </form>
           </li>
         ))}

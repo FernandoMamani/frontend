@@ -13,7 +13,7 @@ export default function Home() {
 
       <main className={styles.main}>
        <h1>Books App</h1>
-          <Link href="/libros">Book List</Link>
+          <Link data-cy="link-to-books" href="/libros">Book List</Link>
       </main>
 
       <footer className={styles.footer}>
